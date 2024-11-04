@@ -1,10 +1,9 @@
-
 from typing import Union, List
-
 from allennlp.common import Params
-from allennlp.data import Instance, DataIterator, Vocabulary
+from allennlp.data import Instance, Vocabulary
 from allennlp.common.file_utils import cached_path
-
+from allennlp.data.data_loaders import MultiProcessDataLoader 
+from allennlp.data import Instance, Vocabulary
 
 from kb.include_all import TokenizerAndCandidateGenerator
 from kb.bert_pretraining_reader import replace_candidates_with_mask_entity
@@ -70,8 +69,7 @@ class KnowBertBatchifier:
         else:
             vocab_params = config['vocabulary']
         self.vocab = Vocabulary.from_params(vocab_params)
-
-        self.iterator = DataIterator.from_params(
+        self.iterator = MultiProcessDataLoader.from_params(
             Params({"type": "basic", "batch_size": batch_size})
         )
         self.iterator.index_with(self.vocab)
